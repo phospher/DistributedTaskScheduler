@@ -1,0 +1,12 @@
+<?xml>
+<TaskConfiguration>
+	<Tasks>
+		<Task code="Task1" name="Task1" operationClass="com.phospher.Test">
+			<Task code="Task2" name="Task2" operationClass="com.phospher.Test2">
+				<Task code="Task3" name="Task3" operationClass="com.phospher.Test3" />
+			</Task>
+			<Task code="Task4" name="Task4" operationClass="com.phospher.Test4" />
+		</Task>
+		<Task code="Task5" name="Task5" operationClass="com.phospher.Test5" />
+	</Tasks>
+</TaskConfiguration>

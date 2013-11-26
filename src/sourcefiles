@@ -1,0 +1,3 @@
+com/phospher/DistributedTaskScheduler/Configurations/Task.java
+com/phospher/DistributedTaskScheduler/Configurations/TaskConfiguration.java
+com/phospher/DistributedTaskScheduler/Configurations/TaskConfigurationProvider.java
