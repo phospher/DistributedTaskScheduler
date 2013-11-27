@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="DistributedTaskScheduler" default="dist" basedir=".">
+  <description>
+       A distributed task scheduler based on Hadoop
+  </description>
+  <property name="src" location="src"/>
+  <property name="classes" location="classes"/>
+  <property name="dist"  location="dist"/>
+
+  <path id="project.class.path">
+    <pathelement path="${classpath}"/>
+    <fileset dir="lib"></fileset>
+  </path>
+
+  <target name="init">
+    <tstamp/>
+    <mkdir dir="${classes}"/>
+  </target>
+
+  <target name="compile" depends="init" description="compile the source " >
+    <javac srcdir="${src}" destdir="${classes}" includeantruntime="false" >
+      <classpath refid="project.class.path"/>
+    </javac>
+  </target>
+
+  <target name="dist" depends="compile" description="generate the distribution" >
+    <mkdir dir="${dist}"/>
+    <jar jarfile="${dist}/DistributedTaskScheduler.jar" basedir="${classes}"/>
+  </target>
+
+  <target name="clean" description="clean up" >
+    <delete dir="${classes}"/>
+    <delete dir="${dist}"/>
+  </target>
+</project>
