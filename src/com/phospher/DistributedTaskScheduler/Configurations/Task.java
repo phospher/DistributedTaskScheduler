@@ -9,8 +9,8 @@ public interface Task {
 	String getName();
 	void setName(String value);
 
-	String getOperationClass();
-	void setOperationClass(String value);
+	String getClassName();
+	void setClassName(String value);
 
 	List<Task> getTasks();
 	void setTasks(List<Task> value);
