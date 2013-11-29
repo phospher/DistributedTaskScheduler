@@ -10,6 +10,8 @@ public class XMLTask implements Task {
 	private String _name;
 	private String _className;
 	private List<Task> _tasks;
+	private String _argsValues;
+	private String[] _args;
 
 	@XmlAttribute(name = "code")
 	public String getCode() {
@@ -38,6 +40,7 @@ public class XMLTask implements Task {
 		this._className = value;
 	}
 
+	@XmlElementWrapper(name = "PrevTasks")
 	@XmlElement(name = "Task", type = XMLTask.class)
 	public List<Task> getTasks() {
 		return this._tasks;
@@ -45,5 +48,23 @@ public class XMLTask implements Task {
 
 	public void setTasks(List<Task> value) {
 		this._tasks = value;
+	}
+
+	@XmlElement(name = "TaskArgs")
+	public String getArgsValues() {
+		return this._argsValues;
+	}
+
+	public void setArgsValues(String value) {
+		this._argsValues = value;
+	}
+
+	@XmlTransient
+	public String[] getArgs() {
+		return this._args;
+	}
+
+	public void setArgs(String[] value) {
+		this._args = value;
 	}
 }

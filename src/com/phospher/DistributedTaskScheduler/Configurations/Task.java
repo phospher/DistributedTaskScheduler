@@ -14,4 +14,7 @@ public interface Task {
 
 	List<Task> getTasks();
 	void setTasks(List<Task> value);
+
+	String[] getArgs();
+	void setArgs(String[] value);
 }
