@@ -3,9 +3,11 @@
   <description>
        A distributed task scheduler based on Hadoop
   </description>
-  <property name="src" location="src"/>
-  <property name="classes" location="classes"/>
-  <property name="dist"  location="dist"/>
+  <property name="src" location="src" />
+  <property name="classes" location="classes" />
+  <property name="dist"  location="dist" />
+  <property name="tests" location="tests" />
+  <property name="testclasses" location="testclasses" />
 
   <path id="project.class.path">
     <pathelement path="${classpath}"/>
@@ -15,11 +17,19 @@
   <target name="init">
     <tstamp/>
     <mkdir dir="${classes}"/>
+    <mkdir dir="${testclasses}" />
   </target>
 
   <target name="compile" depends="init" description="compile the source " >
     <javac srcdir="${src}" destdir="${classes}" includeantruntime="false" >
       <classpath refid="project.class.path"/>
+    </javac>
+    <javac srcdir="${tests}" destdir="${testclasses}" includeantruntime="false">
+      <classpath>
+        <pathelement path="${classes}" />
+        <pathelement path="${classpath}"/>
+        <fileset dir="lib"></fileset>
+      </classpath>
     </javac>
   </target>
 

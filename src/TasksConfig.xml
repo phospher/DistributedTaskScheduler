@@ -1,12 +1,19 @@
 <?xml>
 <TaskConfiguration>
 	<Tasks>
-		<Task code="Task1" name="Task1" operationClass="com.phospher.Test">
-			<Task code="Task2" name="Task2" operationClass="com.phospher.Test2">
-				<Task code="Task3" name="Task3" operationClass="com.phospher.Test3" />
-			</Task>
-			<Task code="Task4" name="Task4" operationClass="com.phospher.Test4" />
+		<Task code="Task1" name="Task1" className="com.phospher.Test">
+			<TaskArgs>
+				arg0 arg1 arg2
+			</TaskArgs>
+			<PrevTasks>
+				<Task code="Task2" name="Task2" className="com.phospher.Test2">
+					<PrevTasks>
+						<Task code="Task3" name="Task3" className="com.phospher.Test3" />
+					</PrevTasks>
+				</Task>
+				<Task code="Task4" name="Task4" className="com.phospher.Test4" />
+			</PrevTasks>
 		</Task>
-		<Task code="Task5" name="Task5" operationClass="com.phospher.Test5" />
+		<Task code="Task5" name="Task5" className="com.phospher.Test5" />
 	</Tasks>
 </TaskConfiguration>
