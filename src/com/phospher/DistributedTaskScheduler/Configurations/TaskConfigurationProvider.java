@@ -1,5 +1,5 @@
 package com.phospher.DistributedTaskScheduler.Configurations;
 
 public interface TaskConfigurationProvider {
-	TaskConfiguration GetConfiguration();
+	TaskConfiguration getConfiguration() throws Exception;
 }
