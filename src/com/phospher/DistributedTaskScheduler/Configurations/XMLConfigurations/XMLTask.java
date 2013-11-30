@@ -57,6 +57,16 @@ public class XMLTask implements Task {
 
 	public void setArgsValues(String value) {
 		this._argsValues = value;
+		LinkedList<String> result = new LinkedList();
+		for(String item : this._argsValues.split(" ")) {
+			if(item != null && !item.trim().isEmpty()) {
+				result.add(item);
+			}
+		}
+
+		String[] resultArray = new String[result.size()];
+		result.toArray(resultArray);
+		this.setArgs(resultArray);
 	}
 
 	@XmlTransient

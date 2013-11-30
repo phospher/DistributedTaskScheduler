@@ -4,10 +4,11 @@ import com.phospher.DistributedTaskScheduler.Configurations.*;
 import java.util.*;
 import javax.xml.bind.annotation.*;
 
-@XmlRootElement(name = "Tasks")
+@XmlRootElement(name = "TaskConfiguration")
 public class XMLTaskConfiguration implements TaskConfiguration {
 	private List<Task> _tasks;
 
+	@XmlElementWrapper(name = "Tasks")
 	@XmlElement(name = "Task", type = XMLTask.class)
 	public List<Task> getTasks() {
 		return this._tasks;
