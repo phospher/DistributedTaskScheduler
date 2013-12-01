@@ -5,49 +5,45 @@ import java.util.*;
 import com.phospher.DistributedTaskScheduler.Configurations.*;
 
 @XmlRootElement(name = "Task")
-public class XMLTask implements Task {
-	private String _code;
-	private String _name;
-	private String _className;
-	private List<Task> _tasks;
+public class XMLTask extends Task {
+	
 	private String _argsValues;
-	private String[] _args;
 
 	@XmlAttribute(name = "code")
 	public String getCode() {
-		return this._code;
+		return super.getCode();
 	}
 
 	public void setCode(String value) {
-		this._code = value;
+		super.setCode(value);
 	}
 
 	@XmlAttribute(name = "name")
 	public String getName() {
-		return this._name;
+		return super.getName();
 	}
 
 	public void setName(String value) {
-		this._name = value;
+		super.setName(value);
 	}
 
 	@XmlAttribute(name = "className")
 	public String getClassName() {
-		return this._className;
+		return super.getClassName();
 	}
 
 	public void setClassName(String value) {
-		this._className = value;
+		super.setClassName(value);
 	}
 
 	@XmlElementWrapper(name = "PrevTasks")
 	@XmlElement(name = "Task", type = XMLTask.class)
 	public List<Task> getTasks() {
-		return this._tasks;
+		return super.getTasks();
 	}
 
 	public void setTasks(List<Task> value) {
-		this._tasks = value;
+		super.setTasks(value);
 	}
 
 	@XmlElement(name = "TaskArgs")
@@ -71,10 +67,6 @@ public class XMLTask implements Task {
 
 	@XmlTransient
 	public String[] getArgs() {
-		return this._args;
-	}
-
-	public void setArgs(String[] value) {
-		this._args = value;
+		return super.getArgs();
 	}
 }
