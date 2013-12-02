@@ -3,7 +3,7 @@ package com.phospher.DistributedTaskScheduler.Configurations;
 import java.util.*;
 import java.io.*;
 
-public class Task implements Serializable {
+public class Task {
 	private String _code;
 	private String _name;
 	private String _className;
