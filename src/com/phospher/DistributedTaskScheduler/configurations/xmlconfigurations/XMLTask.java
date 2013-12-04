@@ -1,8 +1,8 @@
-package com.phospher.DistributedTaskScheduler.Configurations.XMLConfiguration;
+package com.phospher.DistributedTaskScheduler.configurations.xmlconfigurations;
 
 import javax.xml.bind.annotation.*;
 import java.util.*;
-import com.phospher.DistributedTaskScheduler.Configurations.*;
+import com.phospher.DistributedTaskScheduler.configurations.*;
 
 @XmlRootElement(name = "Task")
 public class XMLTask extends Task {

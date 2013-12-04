@@ -2,13 +2,14 @@ import org.junit.runner.*;
 import org.junit.runners.*;
 import org.junit.internal.*;
 
-import com.phospher.DistributedTaskScheduler.Configurations.Tests.*;
+import com.phospher.DistributedTaskScheduler.configurations.tests.*;
+import com.phospher.DistributedTaskScheduler.ioc.tests.*;
 
 public class TestsMain {
 	public static void main(String[] args) {
 		JUnitCore junitCore = new JUnitCore();
 		junitCore.addListener(new TextListener(System.out));
-		junitCore.run(ConfigurationsTestSuite.class);
+		junitCore.run(ConfigurationsTestSuite.class, IOCTestSuite.class);
 	}
 
 	@RunWith(Suite.class)
@@ -16,4 +17,11 @@ public class TestsMain {
 		XMLTaskConfigurationProviderTest.class
 	})
 	private class ConfigurationsTestSuite { }
+
+	@RunWith(Suite.class)
+	@Suite.SuiteClasses({
+		PicoObjectProviderTest.class
+	})
+	private class IOCTestSuite { }
+
 }

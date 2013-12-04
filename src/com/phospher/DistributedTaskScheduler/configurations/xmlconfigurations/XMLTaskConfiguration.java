@@ -1,6 +1,6 @@
-package com.phospher.DistributedTaskScheduler.Configurations.XMLConfiguration;
+package com.phospher.DistributedTaskScheduler.configurations.xmlconfigurations;
 
-import com.phospher.DistributedTaskScheduler.Configurations.*;
+import com.phospher.DistributedTaskScheduler.configurations.*;
 import java.util.*;
 import javax.xml.bind.annotation.*;
 

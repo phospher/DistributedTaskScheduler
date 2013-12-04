@@ -1,4 +1,4 @@
-package com.phospher.DistributedTaskScheduler.Hadoop;
+package com.phospher.DistributedTaskScheduler.hadoop;
 
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.io.*;

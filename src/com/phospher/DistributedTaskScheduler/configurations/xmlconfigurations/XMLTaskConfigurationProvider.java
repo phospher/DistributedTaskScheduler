@@ -1,7 +1,7 @@
-package com.phospher.DistributedTaskScheduler.Configurations.XMLConfiguration;
+package com.phospher.DistributedTaskScheduler.configurations.xmlconfigurations;
 
-import com.phospher.DistributedTaskScheduler.Configurations.*;
-import com.phospher.DistributedTaskScheduler.File.*;
+import com.phospher.DistributedTaskScheduler.configurations.*;
+import com.phospher.DistributedTaskScheduler.file.*;
 import java.io.*;
 import javax.xml.bind.*;
 
@@ -10,9 +10,9 @@ public class XMLTaskConfigurationProvider implements TaskConfigurationProvider {
 	private FileAdapter _fileAdapter;
 	private String _path;
 
-	public XMLTaskConfigurationProvider(FileAdapter fileAdapter, String path) {
+	public XMLTaskConfigurationProvider(FileAdapter fileAdapter) {
 		this._fileAdapter = fileAdapter;
-		this._path = path;
+		this._path = "";
 	}
 
 	public TaskConfiguration getConfiguration() throws Exception {

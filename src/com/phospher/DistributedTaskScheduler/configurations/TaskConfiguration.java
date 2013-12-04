@@ -1,4 +1,4 @@
-package com.phospher.DistributedTaskScheduler.Configurations;
+package com.phospher.DistributedTaskScheduler.configurations;
 
 import java.util.*;
 
