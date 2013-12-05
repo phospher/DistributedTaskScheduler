@@ -4,12 +4,12 @@ import org.picocontainer.*;
 import java.util.*;
 import com.phospher.DistributedTaskScheduler.configurations.*;
 import com.phospher.DistributedTaskScheduler.configurations.xmlconfigurations.*;
-import com.phospher.DistributedTaskScheduler.file.*;
+import com.phospher.DistributedTaskScheduler.hadoop.*;
 
 public class PicoObjectProvider implements ObjectProvider {
 
 	private final static List<Class<?>> TYPE_MAPPING = new ArrayList<Class<?>>() {{
-		add(DefaultFileAdapter.class);
+		add(HDFSFileAdapter.class);
 		add(XMLTaskConfigurationProvider.class);
 	}}; 
 

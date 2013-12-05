@@ -3,7 +3,8 @@ package com.phospher.DistributedTaskScheduler.configurations.tests;
 import org.junit.*;
 import com.phospher.DistributedTaskScheduler.configurations.*;
 import com.phospher.DistributedTaskScheduler.configurations.xmlconfigurations.*;
-import com.phospher.DistributedTaskScheduler.file.*;
+import com.phospher.DistributedTaskScheduler.hadoop.*;
+import org.apache.hadoop.conf.*;
 import org.mockito.*;
 import java.io.*;
 import org.junit.runner.*;
@@ -22,11 +23,11 @@ public class XMLTaskConfigurationProviderTest {
 			+ "name=\"Task5\" className=\"com.phospher.Test5\" /></Tasks></TaskConfiguration>";
 		StringBufferInputStream is = new StringBufferInputStream(testXml);
 
-		FileAdapter mockFileAdapter = Mockito.mock(FileAdapter.class);
-		Mockito.when(mockFileAdapter.readFile(Mockito.anyString())).thenReturn(is);
+		HadoopStreamAdapter mockStreamAdapter = Mockito.mock(HadoopStreamAdapter.class);
+		Mockito.when(mockStreamAdapter.getInputStream(Mockito.any(Configuration.class))).thenReturn(is);
 
-		XMLTaskConfigurationProvider target = new XMLTaskConfigurationProvider(mockFileAdapter);
-		return target.getConfiguration();
+		XMLTaskConfigurationProvider target = new XMLTaskConfigurationProvider(mockStreamAdapter);
+		return target.getConfiguration(null);
 	}
 
 	@Test

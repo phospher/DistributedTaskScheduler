@@ -1,22 +1,21 @@
 package com.phospher.DistributedTaskScheduler.configurations.xmlconfigurations;
 
 import com.phospher.DistributedTaskScheduler.configurations.*;
-import com.phospher.DistributedTaskScheduler.file.*;
+import com.phospher.DistributedTaskScheduler.hadoop.*;
 import java.io.*;
 import javax.xml.bind.*;
+import org.apache.hadoop.conf.*;
 
 public class XMLTaskConfigurationProvider implements TaskConfigurationProvider {
 
-	private FileAdapter _fileAdapter;
-	private String _path;
+	private HadoopStreamAdapter _steamAdapter;
 
-	public XMLTaskConfigurationProvider(FileAdapter fileAdapter) {
-		this._fileAdapter = fileAdapter;
-		this._path = "";
+	public XMLTaskConfigurationProvider(HadoopStreamAdapter steamAdapter) {
+		this._steamAdapter = steamAdapter;
 	}
 
-	public TaskConfiguration getConfiguration() throws Exception {
-		InputStream is = this._fileAdapter.readFile(this._path);
+	public TaskConfiguration getConfiguration(Configuration conf) throws Exception {
+		InputStream is = this._steamAdapter.getInputStream(conf);
 		JAXBContext jaxbContext = JAXBContext.newInstance(XMLTaskConfiguration.class);
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 		Object result = unmarshaller.unmarshal(is);
