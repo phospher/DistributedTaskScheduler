@@ -33,12 +33,8 @@ public class TaskTest {
 	@Test
 	public void readFieldsTest() throws IOException {
 		ByteArrayOutputStream baout = new ByteArrayOutputStream();
-		DataOutputStream dout = new DataOutputStream(baout);
-		UTF8.writeString(dout, "code1");
-		UTF8.writeString(dout, "name1");
-		UTF8.writeString(dout, "classname1");
-		ObjectWritable.writeObject(dout, new Task[0], Task[].class, null);
-		ObjectWritable.writeObject(dout, new String[0], String[].class, null);
+		ObjectOutputStream oout = new ObjectOutputStream(baout);
+		oout.writeObject(this._target);
 
 		ByteArrayInputStream bain = new ByteArrayInputStream(baout.toByteArray());
 		Task actual = new Task();
