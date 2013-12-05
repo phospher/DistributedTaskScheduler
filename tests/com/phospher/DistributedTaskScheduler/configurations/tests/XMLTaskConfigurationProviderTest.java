@@ -39,7 +39,7 @@ public class XMLTaskConfigurationProviderTest {
 	@Test
 	public void getConfigurationTest_AssertPrevTasksCount() throws Exception {
 		Task target = this.processTest().getTasks().get(0);
-		Assert.assertEquals("failure - count of prevTasks is not correct", 2, target.getTasks().size());
+		Assert.assertEquals("failure - count of prevTasks is not correct", 2, target.getTasks().length);
 	}
 
 	@Test

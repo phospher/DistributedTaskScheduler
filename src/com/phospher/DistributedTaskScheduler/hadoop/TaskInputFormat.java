@@ -5,6 +5,8 @@ import org.apache.hadoop.io.*;
 
 public class TaskInputFormat implements InputFormat<Text, ObjectWritable> {
 
+	public final static String OBJECT_PROVIDER_PROPERTY = "objectprovider.classname";
+
 	public RecordReader<Text, ObjectWritable> getRecordReader(InputSplit split, JobConf conf, Reporter reporter) {
 		return null;
 	}

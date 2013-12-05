@@ -38,11 +38,11 @@ public class XMLTask extends Task {
 
 	@XmlElementWrapper(name = "PrevTasks")
 	@XmlElement(name = "Task", type = XMLTask.class)
-	public List<Task> getTasks() {
+	public Task[] getTasks() {
 		return super.getTasks();
 	}
 
-	public void setTasks(List<Task> value) {
+	public void setTasks(Task[] value) {
 		super.setTasks(value);
 	}
 
