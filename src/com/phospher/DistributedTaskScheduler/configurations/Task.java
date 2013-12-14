@@ -2,6 +2,7 @@ package com.phospher.DistributedTaskScheduler.configurations;
 
 import java.util.*;
 import java.io.*;
+import com.phospher.DistributedTaskScheduler.util.*;
 import org.apache.hadoop.io.*;
 
 public class Task implements Writable, Serializable {
@@ -52,32 +53,15 @@ public class Task implements Writable, Serializable {
 	}
 
 	public void write(DataOutput out) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(baos);
-		oos.writeObject(this);
-		out.write(baos.toByteArray());
+		ObjectSerilizationUtil.writeObject(out, this);
 	}
 
 	public void readFields(DataInput in) throws IOException {
-		ByteArrayOutputStream baout = new ByteArrayOutputStream();
-		while(true) {
-			try {
-				baout.write(in.readByte());
-			} catch(EOFException ex) {
-				break;
-			}
-		}
-		
-		try {
-			ObjectInputStream oin = new ObjectInputStream(new ByteArrayInputStream(baout.toByteArray()));
-			Task obj = (Task)oin.readObject();
-			this._code = obj.getCode();
-			this._name = obj.getName();
-			this._className = obj.getClassName();
-			this._tasks = obj.getTasks();
-			this._args = obj.getArgs();
-		} catch(ClassNotFoundException ex) {
-			throw new IOException(ex);
-		}
+		Task obj = (Task)ObjectSerilizationUtil.readObject(in);
+		this._code = obj.getCode();
+		this._name = obj.getName();
+		this._className = obj.getClassName();
+		this._tasks = obj.getTasks();
+		this._args = obj.getArgs();
 	}
 }

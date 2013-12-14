@@ -15,7 +15,8 @@ public class TestsMain {
 	@RunWith(Suite.class)
 	@Suite.SuiteClasses({
 		XMLTaskConfigurationProviderTest.class,
-		TaskTest.class
+		TaskTest.class,
+		XPathTaskConfigurationPropertyGeneratorTest.class
 	})
 	private class ConfigurationsTestSuite { }
 

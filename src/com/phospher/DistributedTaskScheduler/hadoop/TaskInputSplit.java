@@ -4,28 +4,34 @@ import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.io.*;
 import java.io.*;
 import java.util.*;
+import com.phospher.DistributedTaskScheduler.util.*;
 
-public class TaskInputSplit implements InputSplit {
+public class TaskInputSplit implements InputSplit, Serializable {
 
-	private List<Task> _taskList;
+	private Task[] _tasks;
 
-	public TaskInputSplit(List<Task> taskList) {
-		this._taskList = taskList;
+	public TaskInputSplit(Task[] tasks) {
+		this._tasks = tasks;
 	}
 
 	public long getLength() {
-		return this._taskList.size();
+		return this._tasks.length;
 	}
 
 	public String[] getLocations() {
 		return new String[] {};
 	}
 
-	public void readFields(DataInput in) {
-
+	public Task[] getTasks() {
+		return this._tasks;
 	}
 
-	public void write(DataOutput out) {
+	public void readFields(DataInput in) throws IOException {
+		TaskInputSplit obj = (TaskInputSplit)ObjectSerilizationUtil.readObject(in);
+		this._tasks = obj.getTasks();
+	}
 
+	public void write(DataOutput out) throws IOException {
+		ObjectSerilizationUtil.writeObject(out, this);
 	}
 }

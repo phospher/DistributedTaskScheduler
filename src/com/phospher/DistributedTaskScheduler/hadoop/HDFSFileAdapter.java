@@ -6,7 +6,7 @@ import org.apache.hadoop.fs.*;
 
 public class HDFSFileAdapter implements HadoopStreamAdapter {
 
-	private final static String FILE_PATH_PROPERTY = "taskconfig.filepath";
+	private final static String FILE_PATH_PROPERTY = "distributedtaskconfig.filepath";
 
 	public InputStream getInputStream(Configuration conf) throws Exception {
 		FileSystem fs = FileSystem.get(conf);
