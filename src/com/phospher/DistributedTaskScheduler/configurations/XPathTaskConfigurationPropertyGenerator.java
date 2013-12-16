@@ -1,13 +1,18 @@
 package com.phospher.DistributedTaskScheduler.configurations;
 
+import org.apache.hadoop.conf.*;
+
 public class XPathTaskConfigurationPropertyGenerator implements TaskConfigurationPropertyGenerator {
 
-	public String generateTaskCode(TaskConfiguration taskConfiguration, String taskCode) {
-		return null;
+	private final static String SPLIT_TOKEN = "/";
+
+	public String generateTaskCode(Configuration configuration, String taskCode) {
+		String parentCode = configuration.get(ConfigurationPropertyName.CURRENT_RULE_PROPERTY.getPropertyName());
+		return parentCode == null || parentCode.isEmpty() ? taskCode : parentCode + SPLIT_TOKEN + taskCode;
 	}
 
 	public Task searchTask(TaskConfiguration taskConfiguration, String taskCode) {
-		String[] taskCodes = taskCode.split("/");
+		String[] taskCodes = taskCode.split(SPLIT_TOKEN);
 		Task currentTask = null;
 
 		if(taskCodes.length > 0 ) {

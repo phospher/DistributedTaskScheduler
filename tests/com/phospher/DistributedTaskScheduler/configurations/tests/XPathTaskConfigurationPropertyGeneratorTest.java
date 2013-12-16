@@ -6,6 +6,7 @@ import java.util.*;
 import org.mockito.*;
 import org.junit.runner.*;
 import org.junit.runners.*;
+import org.apache.hadoop.conf.*;
 
 @RunWith(JUnit4.class)
 public class XPathTaskConfigurationPropertyGeneratorTest {
@@ -84,6 +85,32 @@ public class XPathTaskConfigurationPropertyGeneratorTest {
 	public void searchTaskTest_SearchFormalTaskFailure() {
 		Task actual = this.processSearchChildTask("Code1/Code14");
 		Assert.assertNull("failure - do not return null", actual);
+	}
+
+	private String processGenerateTaskCodeTest(String currentTaskCode, String taskCode) {
+		Configuration configuration = new Configuration();
+		if(currentTaskCode != null) {
+			configuration.set(ConfigurationPropertyName.CURRENT_RULE_PROPERTY.getPropertyName(), currentTaskCode);
+		}
+		return new XPathTaskConfigurationPropertyGenerator().generateTaskCode(configuration, taskCode);
+	}
+
+	@Test
+	public void generateTaskCodeTest_CurrentCodeIsNotEmpty() {
+		String actual = processGenerateTaskCodeTest("Code1/Code2", "Code3");
+		Assert.assertEquals("failures - do not return the correct result", "Code1/Code2/Code3", actual);
+	}
+
+	@Test
+	public void generateTaskCodeTest_CurrentCodeIsEmpty() {
+		String actual = processGenerateTaskCodeTest("", "Code3");
+		Assert.assertEquals("failure - do not return the correct result", "Code3", actual);
+	}
+
+	@Test
+	public void generateTaskCodeTest_CurrentCodeNotExits() {
+		String actual = processGenerateTaskCodeTest(null, "Code3");
+		Assert.assertEquals("failure - do not return the correct result", "Code3", actual);
 	}
 
 }
