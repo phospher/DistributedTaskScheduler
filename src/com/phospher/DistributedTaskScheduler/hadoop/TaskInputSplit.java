@@ -1,6 +1,7 @@
 package com.phospher.DistributedTaskScheduler.hadoop;
 
-import org.apache.hadoop.mapred.*;
+import org.apache.hadoop.mapred.InputSplit;
+import com.phospher.DistributedTaskScheduler.configurations.*;
 import org.apache.hadoop.io.*;
 import java.io.*;
 import java.util.*;

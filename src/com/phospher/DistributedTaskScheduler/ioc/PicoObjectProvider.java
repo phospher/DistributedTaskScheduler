@@ -11,6 +11,7 @@ public class PicoObjectProvider implements ObjectProvider {
 	private final static List<Class<?>> TYPE_MAPPING = new ArrayList<Class<?>>() {{
 		add(HDFSFileAdapter.class);
 		add(XMLTaskConfigurationProvider.class);
+		add(XPathTaskConfigurationPropertyGenerator.class);
 	}}; 
 
 	private MutablePicoContainer _picocontainer;
