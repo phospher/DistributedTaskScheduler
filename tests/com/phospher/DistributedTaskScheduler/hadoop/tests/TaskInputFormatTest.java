@@ -76,20 +76,62 @@ public class TaskInputFormatTest {
 		return new TaskInputFormat().getSplits(conf, numSplit);
 	}
 
+	private int getTaskCount(InputSplit[] inputSplits) throws Exception {
+		int taskCount = 0;
+		for(InputSplit item : inputSplits) {
+			taskCount += item.getLength();
+		}
+		return taskCount;
+	}
+
+	private void assertCountOfInputSplit(int taskCount, int numSplit, int expect) throws Exception {
+		InputSplit[] actual = this.getSplitsTestProcess(taskCount, numSplit);
+		Assert.assertEquals("failure - did not return the correct count of InputSplit", expect, actual.length);
+	}
+
+	private void assertContainsAllTask(int taskCount, int numSplit) throws Exception {
+		InputSplit[] actual = this.getSplitsTestProcess(taskCount, numSplit);
+		Assert.assertEquals("failure - did not return the correct count of Task", taskCount, this.getTaskCount(actual));
+	}
+
 	@Test
 	public void getSplitsTest_TaskCountLessThenNumSplit_AssertCountOfInputSplit() throws Exception {
-		InputSplit[] actual = this.getSplitsTestProcess(3, 4);
-		Assert.assertEquals("failure - did not return the correct count of InputSplit", 3, actual.length);
+		this.assertCountOfInputSplit(3, 4, 3);
 	}
 
 	@Test
 	public void getSplitsTest_TaskCountLessThenNumSplit_ContainsAllTask() throws Exception {
-		InputSplit[] actual = this.getSplitsTestProcess(3, 4);
-		int taskCount = 0;
-		for(InputSplit item : actual) {
-			taskCount += item.getLength();
-		}
-		Assert.assertEquals("failure - did not return the correct count of Task", 3, actual.length);
+		this.assertContainsAllTask(3, 4);
+	}
+
+	@Test
+	public void getSplitsTest_TaskCountMoreThenNumSplit_AssertCountOfInputSplit() throws Exception {
+		this.assertCountOfInputSplit(6, 4, 4);
+	}
+
+	@Test
+	public void getSplitsTest_TaskCountMoreThenNumSplit_ContainsAllTask() throws Exception {
+		this.assertContainsAllTask(6, 4);
+	}
+
+	@Test
+	public void getSplitsTest_TaskCountEqualsNumSplit_AssertCountOfInputSplit() throws Exception {
+		this.assertCountOfInputSplit(4, 4, 4);
+	}
+
+	@Test
+	public void getSplitsTest_TaskCountEqualsNumSplit_ContainsAllTask() throws Exception {
+		this.assertContainsAllTask(4, 4);
+	}
+
+	@Test
+	public void getSplitsTest_TaskCountTwiceofNumSplit_AssertCountOfInputSplit() throws Exception {
+		this.assertCountOfInputSplit(8, 4, 4);
+	}
+
+	@Test
+	public void getSplitsTest_TaskCountTwiceOfNumSplit_ContainsAllTask() throws Exception {
+		this.assertContainsAllTask(8, 4);
 	}
 
 }

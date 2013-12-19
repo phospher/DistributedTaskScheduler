@@ -41,8 +41,8 @@ public class TaskInputFormat implements InputFormat<Text, Task> {
 			}
 			InputSplit[] result = new InputSplit[taskArraies.size()];
 			for(int i = 0; i < result.length; i++) {
-				Task[] tasks = new Task[taskArraies.get(taskArraiesIndex).size()];
-				tasks = taskArraies.get(taskArraiesIndex).toArray(tasks);
+				Task[] tasks = new Task[taskArraies.get(i).size()];
+				tasks = taskArraies.get(i).toArray(tasks);
 				result[i] = new TaskInputSplit(tasks);
 			}
 			return result;
