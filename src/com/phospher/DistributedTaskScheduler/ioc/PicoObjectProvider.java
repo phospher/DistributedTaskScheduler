@@ -8,11 +8,11 @@ import com.phospher.DistributedTaskScheduler.hadoop.*;
 
 public class PicoObjectProvider implements ObjectProvider {
 
-	private final static List<Class<?>> TYPE_MAPPING = new ArrayList<Class<?>>() {{
-		add(HDFSFileAdapter.class);
-		add(XMLTaskConfigurationProvider.class);
-		add(XPathTaskConfigurationPropertyGenerator.class);
-	}}; 
+	private final static Class<?>[] TYPE_MAPPING = new Class<?>[] {
+		HDFSFileAdapter.class,
+		XMLTaskConfigurationProvider.class,
+		XPathTaskConfigurationPropertyGenerator.class
+	}; 
 
 	private MutablePicoContainer _picocontainer;
 
