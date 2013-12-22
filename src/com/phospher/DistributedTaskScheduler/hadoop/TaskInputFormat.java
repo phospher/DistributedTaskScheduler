@@ -15,7 +15,8 @@ import java.lang.reflect.Constructor;
 public class TaskInputFormat implements InputFormat<Text, Task> {
 
 	public RecordReader<Text, Task> getRecordReader(InputSplit split, JobConf conf, Reporter reporter) throws IOException {
-		return null;
+		TaskInputSplit inputSplit = (TaskInputSplit)split;
+		return new TaskRecordReader(inputSplit.getTasks());
 	}
 
 	public InputSplit[] getSplits(JobConf conf, int numSplits) throws IOException {
