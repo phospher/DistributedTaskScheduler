@@ -15,7 +15,7 @@ public class XMLTaskConfigurationProvider implements TaskConfigurationProvider {
 	}
 
 	public TaskConfiguration getConfiguration(Configuration conf) throws Exception {
-		InputStream is = this._steamAdapter.getInputStream(conf);
+		InputStream is = this._steamAdapter.getInputStream(conf, ConfigurationPropertyName.TASK_CONFIG_FILE_PATH_PROPERTY.getPropertyName());
 		JAXBContext jaxbContext = JAXBContext.newInstance(XMLTaskConfiguration.class);
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 		Object result = unmarshaller.unmarshal(is);

@@ -24,7 +24,7 @@ public class XMLTaskConfigurationProviderTest {
 		StringBufferInputStream is = new StringBufferInputStream(testXml);
 
 		HadoopStreamAdapter mockStreamAdapter = Mockito.mock(HadoopStreamAdapter.class);
-		Mockito.when(mockStreamAdapter.getInputStream(Mockito.any(Configuration.class))).thenReturn(is);
+		Mockito.when(mockStreamAdapter.getInputStream(Mockito.any(Configuration.class), Mockito.any(String.class))).thenReturn(is);
 
 		XMLTaskConfigurationProvider target = new XMLTaskConfigurationProvider(mockStreamAdapter);
 		return target.getConfiguration(null);

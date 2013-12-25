@@ -29,7 +29,8 @@ public class TestsMain {
 
 	@RunWith(Suite.class)
 	@Suite.SuiteClasses({
-		TaskInputFormatTest.class
+		TaskInputFormatTest.class,
+		TaskRunningResultTest.class
 	})
 	private class HadoopTestSuite { }
 

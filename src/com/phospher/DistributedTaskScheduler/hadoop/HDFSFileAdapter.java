@@ -6,12 +6,25 @@ import org.apache.hadoop.fs.*;
 
 public class HDFSFileAdapter implements HadoopStreamAdapter {
 
-	private final static String FILE_PATH_PROPERTY = "distributedtaskconfig.filepath";
-
-	public InputStream getInputStream(Configuration conf) throws Exception {
+	public InputStream getInputStream(Configuration conf, String filePathPropertyName) throws IOException {
 		FileSystem fs = FileSystem.get(conf);
-		Path path = new Path(conf.getRaw(FILE_PATH_PROPERTY));
+		Path path = new Path(conf.getRaw(filePathPropertyName));
 		return fs.open(path);
+	}
+
+	public void append(Configuration conf, String filePathPropertyName, String text) throws IOException {
+		FileSystem fs = FileSystem.get(conf);
+		Path path = new Path(conf.getRaw(filePathPropertyName));
+		FSDataOutputStream fsdout = fs.append(path);
+		OutputStreamWriter outWriter = new OutputStreamWriter(fsdout, "UTF-8");
+		outWriter.append(text);
+		outWriter.flush();
+	}
+
+	public void createOrReplace(Configuration conf, String filePathPropertyName) throws IOException {
+		FileSystem fs = FileSystem.get(conf);
+		Path path = new Path(conf.getRaw(filePathPropertyName));
+		fs.create(path, true);
 	}
 
 }
