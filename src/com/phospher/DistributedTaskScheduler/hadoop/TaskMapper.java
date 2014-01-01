@@ -11,6 +11,8 @@ import com.phospher.DistributedTaskScheduler.configurations.ConfigurationPropert
 import org.apache.hadoop.io.Text;
 import com.phospher.DistributedTaskScheduler.configurations.Task;
 import com.phospher.DistributedTaskScheduler.ioc.*;
+import com.phospher.DistributedTaskScheduler.TaskProcess;
+import com.phospher.DistributedTaskScheduler.util.ObjectUtil;
 import java.io.*;
 
 public class TaskMapper extends TaskMapReduceBase implements Mapper<Text, Task, Text, TaskRunningResult> {
@@ -24,11 +26,37 @@ public class TaskMapper extends TaskMapReduceBase implements Mapper<Text, Task, 
 			if(childTasksResult == TaskResult.FAILURE) {
 				TaskRunningResult result = new TaskRunningResult();
 				result.setResult(TaskResult.FAILURE);
-				result.setMessage("One or more child tasks is FAILURE");
-				result.setException(new Exception("One or more child tasks is FAILURE"));
+				result.setMessage("One or more child tasks is FAILURE: " + key.toString());
 				output.collect(key, result);
 				return;
 			}
+		}
+
+		//executing task
+		try {
+			Object instance = ObjectUtil.createInstance(value.getClassName());
+			if(!(instance instanceof TaskProcess)) {
+				throw new Exception("Invaid classname for task: " + key.toString());
+			}
+
+			TaskProcess taskProcess = (TaskProcess)instance;
+			TaskResult taskResult = taskProcess.run(value.getArgs());
+			TaskRunningResult result = new TaskRunningResult();
+			if(taskResult == TaskResult.FAILURE) {
+				result.setResult(TaskResult.FAILURE);
+				result.setMessage("Task running FAILURE: " + key.toString());
+			} else if(taskResult == TaskResult.WARNING || childTasksResult == TaskResult.WARNING) {
+				result.setResult(TaskResult.WARNING);
+			} else {
+				result.setResult(TaskResult.SUCCESS);
+			}
+			output.collect(key, result);
+		} catch(Exception ex) {
+			TaskRunningResult result = new TaskRunningResult();
+			result.setResult(TaskResult.FAILURE);
+			result.setMessage(ex.getMessage());
+			result.setException(ex);
+			output.collect(key, result);
 		}
 	}
 
