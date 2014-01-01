@@ -21,7 +21,7 @@ public class TaskInputFormat implements InputFormat<Text, Task> {
 
 	public InputSplit[] getSplits(JobConf conf, int numSplits) throws IOException {
 		try {
-			ObjectProvider objectProvider = (ObjectProvider)this.createNewInstance(conf.get(ConfigurationPropertyName.OBJECT_PROVIDER_PROPERTY.getPropertyName()));
+			ObjectProvider objectProvider = ObjectProviderFactory.getObjectProvider(conf);
 			TaskConfigurationProvider configurationProvider = (TaskConfigurationProvider)objectProvider.getInstance(TaskConfigurationProvider.class);
 			TaskConfiguration taskConfiguration = configurationProvider.getConfiguration(conf);
 			TaskConfigurationPropertyGenerator propertyGenerator = (TaskConfigurationPropertyGenerator)objectProvider.getInstance(TaskConfigurationPropertyGenerator.class);
@@ -49,26 +49,6 @@ public class TaskInputFormat implements InputFormat<Text, Task> {
 			return result;
 		} catch(Exception ex) {
 			throw new IOException(ex);
-		}
-	}
-
-	private Object createNewInstance(String className) throws Exception {
-		if(className == null || className.isEmpty()) {
-			return null;
-		}
-
-		if(className.contains("$")) {
-			String outterClassName = className.substring(0, className.indexOf('$'));
-			Class outterClass = Class.forName(outterClassName);
-			for(Class c : outterClass.getClasses()) {
-				if(c.getName().equals(className)) {
-					Constructor con = c.getConstructor(new Class[] { outterClass });
-					return con.newInstance(new Object[] { outterClass.newInstance() });
-				}
-			}
-			return null;
-		} else {
-			return Class.forName(className).newInstance();
 		}
 	}
 
