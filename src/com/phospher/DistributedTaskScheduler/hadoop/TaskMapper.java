@@ -17,6 +17,18 @@ import java.io.*;
 
 public class TaskMapper extends TaskMapReduceBase implements Mapper<Text, Task, Text, TaskRunningResult> {
 
+	JobRunner _jobRunner;
+
+	//default constructor for hadoop
+	public TaskMapper() {
+		this._jobRunner = new HadoopJobRunner();
+	}
+
+	//constructor for unit test
+	public TaskMapper(JobRunner jobRunner) {
+		this._jobRunner = jobRunner;
+	}
+
 	public void map(Text key, Task value, OutputCollector<Text, TaskRunningResult> output, Reporter reporter) throws IOException {
 		TaskResult childTasksResult = TaskResult.SUCCESS;
 
@@ -108,8 +120,7 @@ public class TaskMapper extends TaskMapReduceBase implements Mapper<Text, Task, 
 		conf.setInputFormat(TaskInputFormat.class);
 
 		try {
-			RunningJob runningJob = JobClient.runJob(conf);
-			runningJob.waitForCompletion();
+			this._jobRunner.runJob(conf);
 			return this.getJobResult(jobName);
 		} catch(IOException ex) {
 			return TaskResult.FAILURE;
