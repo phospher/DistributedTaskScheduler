@@ -31,7 +31,8 @@ public class TestsMain {
 	@Suite.SuiteClasses({
 		TaskInputFormatTest.class,
 		TaskFeedBackTest.class,
-		TaskRunningResultTest.class
+		TaskRunningResultTest.class,
+		TaskMapperTest.class
 	})
 	private class HadoopTestSuite { }
 
