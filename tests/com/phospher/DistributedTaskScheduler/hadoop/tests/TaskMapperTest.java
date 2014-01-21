@@ -14,6 +14,13 @@ import com.phospher.DistributedTaskScheduler.configurations.Task;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.JobConf;
 import com.phospher.DistributedTaskScheduler.configurations.ConfigurationPropertyName;
+import org.mockito.*;
+import org.mockito.stubbing.Answer;
+import org.mockito.invocation.InvocationOnMock;
+import com.phospher.DistributedTaskScheduler.hadoop.JobRunner;
+import com.phospher.DistributedTaskScheduler.ioc.ObjectProvider;
+import java.util.List;
+import java.util.ArrayList;
 
 @RunWith(JUnit4.class)
 public class TaskMapperTest {
@@ -60,24 +67,21 @@ public class TaskMapperTest {
 		}
 	}
 
-	public class MockHadoopStreamAdapter implements HadoopStreamAdapter {
-		public InputStream getInputStream(Configuration conf, String filePathPropertyName) throws IOException {
-			String taskResultString = conf.get("taskresult");
-			StringBuilder resultString = new StringBuilder();
-			for(String item : taskResultString.split(";")) {
-				String[] taskResult = item.split(":");
-				resultString.append(taskResult[0]);
-				resultString.append(",");
-				resultString.append(taskResult[1]);
-				resultString.append("\n");
+	public class MockObjectProvider implements ObjectProvider {
+		public Object getInstance(Class<?> interClass) {
+			HadoopStreamAdapter result = Mockito.mock(HadoopStreamAdapter.class);
+			try {
+				Mockito.when(result.getInputStream(Mockito.any(Configuration.class), Mockito.any(String.class))).then(new Answer<InputStream>() {
+					public InputStream answer(InvocationOnMock invocation) {
+						Configuration conf = (Configuration)invocation.getArguments()[0];
+						String taskCode = conf.get(ConfigurationPropertyName.CURRENT_RULE_PROPERTY.getPropertyName());
+						String jobName = conf.get(ConfigurationPropertyName.CURRENT_JOB_ID.getPropertyName()) + "_TASK_" + taskCode;
+						return new StringBufferInputStream(jobName + "," + conf.get("taskresult") + "\n");
+					}
+				});
+			} catch(IOException ex) {
 			}
-			return new StringBufferInputStream(resultString.toString());
-		}
-
-		public void append(Configuration conf, String filePathPropertyName, String text) throws IOException {
-		}
-
-		public void createOrReplace(Configuration conf, String filePathPropertyName) throws IOException {
+			return result;
 		}
 	}
 
@@ -88,8 +92,9 @@ public class TaskMapperTest {
 		task.setClassName(className);
 		task.setTasks(childrenTasks);
 		TaskTestCollector outputCollector = new TaskTestCollector();
-		TaskMapper target = new TaskMapper();
+		TaskMapper target = new TaskMapper(Mockito.mock(JobRunner.class));
 		conf.set(ConfigurationPropertyName.CURRENT_RULE_PROPERTY.getPropertyName(), taskCode.toString());
+		conf.set(ConfigurationPropertyName.OBJECT_PROVIDER_PROPERTY.getPropertyName(), "com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$MockObjectProvider");
 		target.configure(conf);
 		target.map(taskCode, task, outputCollector, null);
 		Assert.assertEquals("failure - Do not return the correct result", expect, outputCollector.get(taskCode).getResult());
@@ -115,24 +120,83 @@ public class TaskMapperTest {
 		this.processMapTest("com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$WarningTaskProcess", null, TaskResult.WARNING, new JobConf());
 	}
 
-	private void processChildrenTaskTest(String className, Map<String, TaskResult> childrenTasksResult, TaskResult expect) throws IOException {
+	private void processChildrenTaskTest(String className, TaskResult childrenTaskResult, TaskResult expect) throws IOException {
 		JobConf conf = new JobConf();
 		conf.set(ConfigurationPropertyName.CURRENT_JOB_ID.getPropertyName(), "TESTJOB");
-		Task[] childrenTasks = new Task[childrenTasksResult.size()];
+		Task[] childrenTasks = new Task[3];
 		int taskArrayIndex = 0;
 
 		StringBuilder sb = new StringBuilder();
-		for(Map.Entry<String, TaskResult> item : childrenTasksResult.entrySet()) {
-			sb.append("TESTJOB_TASK_" + item.getKey());
-			sb.append(":");
-			sb.append(item.getValue().name());
-			sb.append(";");
-
-			childrenTasks[taskArrayIndex] = new Task();
-			childrenTasks[taskArrayIndex].setCode(item.getKey());
+		for(int i = 0; i < childrenTasks.length; i++) {
+			childrenTasks[i] = new Task();
+			childrenTasks[i].setCode("children" + i);
 		}
-		conf.set("taskresult", sb.toString());
+		conf.set("taskresult", childrenTaskResult.name());
 
 		this.processMapTest(className, childrenTasks, expect, conf);
+	}
+
+	@Test
+	public void mapTest_TaskRunningSuccessWithAllChildrenSuccess() throws IOException {
+		this.processChildrenTaskTest("com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$SuccessTaskProcess", TaskResult.SUCCESS, TaskResult.SUCCESS);
+	}
+
+	@Test
+	public void mapTest_TaskRunningFailureWithAllChildrenSuccess() throws IOException {
+		this.processChildrenTaskTest("com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$FailureTaskProcess", TaskResult.SUCCESS, TaskResult.FAILURE);
+	}
+
+	@Test
+	public void mapTest_TaskRunningWarningWithAllChildrenSuccess() throws IOException {
+		this.processChildrenTaskTest("com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$WarningTaskProcess", TaskResult.SUCCESS, TaskResult.WARNING);
+	}
+
+	@Test
+	public void mapTest_TaskRunningExceptionWithAllChildrenSuccess() throws IOException {
+		this.processChildrenTaskTest("com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$ExceptionTaskProcess", TaskResult.SUCCESS, TaskResult.FAILURE);
+	}
+
+	@Test
+	public void mapTest_TaskRunningSuccessWithAllChildrenWarning() throws IOException {
+		this.processChildrenTaskTest("com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$SuccessTaskProcess", TaskResult.WARNING, TaskResult.WARNING);
+	}
+
+	@Test
+	public void mapTest_TaskRunningFailureWithAllChildrenWarning() throws IOException {
+		this.processChildrenTaskTest("com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$FailureTaskProcess", TaskResult.WARNING, TaskResult.FAILURE);
+	}
+
+	@Test
+	public void mapTest_TaskRunningWarningWithAllChildrenWarning() throws IOException {
+		this.processChildrenTaskTest("com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$WarningTaskProcess", TaskResult.WARNING, TaskResult.WARNING);
+	}
+
+	@Test
+	public void mapTest_TaskRunningExceptionWithAllChildrenWarning() throws IOException {
+		this.processChildrenTaskTest("com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$ExceptionTaskProcess", TaskResult.WARNING, TaskResult.FAILURE);
+	}
+
+	private void processAllChildrenFailure(String className) throws IOException {
+		this.processChildrenTaskTest(className, TaskResult.FAILURE, TaskResult.FAILURE);
+	}
+
+	@Test
+	public void mapTest_TaskRunningSuccessWithAllChildrenFailure() throws IOException {
+		this.processAllChildrenFailure("com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$SuccessTaskProcess");
+	}
+
+	@Test
+	public void mapTest_TaskRunningFailureWithAllChildrenFailure() throws IOException {
+		this.processAllChildrenFailure("com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$FailureTaskProcess");
+	}
+
+	@Test
+	public void mapTest_TaskRunningWarningWithAllChildrenFailure() throws IOException {
+		this.processAllChildrenFailure("com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$WarningTaskProcess");
+	}
+
+	@Test
+	public void mapTest_TaskRunningExceptionWithAllChildrenFailure() throws IOException {
+		this.processAllChildrenFailure("com.phospher.DistributedTaskScheduler.hadoop.tests.TaskMapperTest$ExceptionTaskProcess");
 	}
 }

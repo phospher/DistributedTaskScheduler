@@ -86,6 +86,7 @@ public class TaskMapper extends TaskMapReduceBase implements Mapper<Text, Task, 
 				String[] data = line.split(",");
 				if(data.length > 1 && !data[0].isEmpty() && !data[1].isEmpty() && data[0].equals(jobName)) {
 					result = Enum.valueOf(TaskResult.class, data[1]);
+					break;
 				}
 				line = reader.readLine();
 			}
