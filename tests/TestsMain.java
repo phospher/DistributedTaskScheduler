@@ -32,7 +32,8 @@ public class TestsMain {
 		TaskInputFormatTest.class,
 		TaskFeedBackTest.class,
 		TaskRunningResultTest.class,
-		TaskMapperTest.class
+		TaskMapperTest.class,
+		TaskReducerTest.class
 	})
 	private class HadoopTestSuite { }
 

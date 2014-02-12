@@ -25,23 +25,6 @@ import java.util.ArrayList;
 @RunWith(JUnit4.class)
 public class TaskMapperTest {
 
-	public class TaskTestCollector implements OutputCollector<Text, TaskRunningResult> {
-
-		private HashMap<Text, TaskRunningResult> _data;
-
-		public TaskTestCollector() {
-			this._data = new HashMap<Text, TaskRunningResult>();
-		}
-
-		public TaskRunningResult get(Text key) {
-			return this._data.get(key);
-		}
-
-		public void collect(Text key, TaskRunningResult value) throws IOException {
-			this._data.put(key, value);
-		}
-
-	}
 
 	public class SuccessTaskProcess implements TaskProcess {
 		public TaskResult run(String[] args) throws Exception {

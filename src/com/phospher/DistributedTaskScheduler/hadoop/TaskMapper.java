@@ -31,15 +31,16 @@ public class TaskMapper extends TaskMapReduceBase implements Mapper<Text, Task, 
 
 	public void map(Text key, Task value, OutputCollector<Text, TaskRunningResult> output, Reporter reporter) throws IOException {
 		TaskResult childTasksResult = TaskResult.SUCCESS;
+		String parentTaskCode = this.getJob().get(ConfigurationPropertyName.CURRENT_RULE_PROPERTY.getPropertyName());
 
 		//if the task contains child tasks, executing the child tasks first
 		if(value.getTasks() != null && value.getTasks().length > 0) {
-			childTasksResult = this.runChildTask();
+			childTasksResult = this.runChildTask(key.toString());
 			if(childTasksResult == TaskResult.FAILURE) {
 				TaskRunningResult result = new TaskRunningResult();
 				result.setResult(TaskResult.FAILURE);
 				result.setMessage("One or more child tasks is FAILURE: " + key.toString());
-				output.collect(key, result);
+				output.collect(new Text(parentTaskCode), result);
 				return;
 			}
 		}
@@ -62,13 +63,13 @@ public class TaskMapper extends TaskMapReduceBase implements Mapper<Text, Task, 
 			} else {
 				result.setResult(TaskResult.SUCCESS);
 			}
-			output.collect(key, result);
+			output.collect(new Text(parentTaskCode), result);
 		} catch(Exception ex) {
 			TaskRunningResult result = new TaskRunningResult();
 			result.setResult(TaskResult.FAILURE);
 			result.setMessage(ex.getMessage());
 			result.setException(ex);
-			output.collect(key, result);
+			output.collect(new Text(parentTaskCode), result);
 		}
 	}
 
@@ -108,9 +109,8 @@ public class TaskMapper extends TaskMapReduceBase implements Mapper<Text, Task, 
 		return result;
 	}
 
-	private TaskResult runChildTask() {
+	private TaskResult runChildTask(String taskCode) {
 		JobConf conf = new JobConf();
-		String taskCode = this.getJob().get(ConfigurationPropertyName.CURRENT_RULE_PROPERTY.getPropertyName());
 		String jobName = this.getJob().get(ConfigurationPropertyName.CURRENT_JOB_ID.getPropertyName()) + "_TASK_" + taskCode;
 		conf.setJobName(jobName);
 		conf.set(ConfigurationPropertyName.CURRENT_RULE_PROPERTY.getPropertyName(), taskCode);
