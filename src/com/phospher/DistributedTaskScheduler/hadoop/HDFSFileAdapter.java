@@ -27,4 +27,10 @@ public class HDFSFileAdapter implements HadoopStreamAdapter {
 		fs.create(path, true);
 	}
 
+	public boolean exists(Configuration conf, String filePathPropertyName) throws IOException {
+		FileSystem fs = FileSystem.get(conf);
+		Path path = new Path(conf.getRaw(filePathPropertyName));
+		return fs.exists(path);
+	}
+
 }

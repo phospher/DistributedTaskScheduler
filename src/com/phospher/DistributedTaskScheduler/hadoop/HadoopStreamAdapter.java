@@ -9,4 +9,6 @@ public interface HadoopStreamAdapter {
 	void append(Configuration conf, String filePathPropertyName, String text) throws IOException;
 
 	void createOrReplace(Configuration conf, String filePathPropertyName) throws IOException;
+
+	boolean exists(Configuration conf, String filePathPropertyName) throws IOException;
 }

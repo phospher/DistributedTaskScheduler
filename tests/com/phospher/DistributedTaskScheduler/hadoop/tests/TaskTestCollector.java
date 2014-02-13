@@ -10,7 +10,7 @@ public class TaskTestCollector implements OutputCollector<Text, TaskRunningResul
 
 	private HashMap<Text, TaskRunningResult> _data;
 
-	public TaskTestCollector() {
+	public TaskTestCollector() throws IOException {
 		this._data = new HashMap<Text, TaskRunningResult>();
 	}
 
