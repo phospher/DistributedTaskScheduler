@@ -19,6 +19,7 @@ public class HDFSFileAdapter implements HadoopStreamAdapter {
 		OutputStreamWriter outWriter = new OutputStreamWriter(fsdout, "UTF-8");
 		outWriter.append(text);
 		outWriter.flush();
+		fsdout.close();
 	}
 
 	public void createOrReplace(Configuration conf, String filePathPropertyName) throws IOException {

@@ -119,6 +119,7 @@ public class TaskMapper extends TaskMapReduceBase implements Mapper<Text, Task, 
 		conf.setMapperClass(TaskMapper.class);
 		conf.setReducerClass(TaskReducer.class);
 		conf.setInputFormat(TaskInputFormat.class);
+		conf.setOutputFormat(TaskOutputFormat.class);
 
 		try {
 			this._jobRunner.runJob(conf);
